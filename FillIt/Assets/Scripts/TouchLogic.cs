@@ -31,9 +31,10 @@ public class TouchLogic : MonoBehaviour {
 	void Update ()
 	{
 		if (Input.GetMouseButton (0)) {
-			if (Contenido.transform.position.y < 159f) {
+			if (Contenido.transform.position.y < 69) {
+                	Debug.Log (Contenido.transform.position.y);
 
-				Contenido.transform.Translate (new Vector3 (0.0f, 1.0f * Speed ));
+                Contenido.transform.Translate (new Vector3 (0.0f, 1.0f * Speed ));
 			} else {
 				PerfectfillIt ();
 			}
@@ -63,7 +64,7 @@ public class TouchLogic : MonoBehaviour {
 		//Posicion momentanea
 		bool nuevo = true ;
 		if (nuevo) {
-			GameObject nuevoVaso =  GameObjectseries.Instantiate(Vaso,new Vector3(10,-80f,0.0f),new Quaternion());
+			GameObject nuevoVaso =  GameObject.Instantiate(Vaso,new Vector3(10,-80f,0.0f),new Quaternion()) as GameObject;
 			nuevoVaso.transform.parent = GameObject.Find ("Canvas").transform;
 			nuevo = false; 
 		}
