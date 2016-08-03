@@ -5,6 +5,7 @@ public class TouchLogic : MonoBehaviour {
 
 	public GameObject Vaso;
     GameObject Contenido;
+	GameObject Cube_Collider;
 	GameObject Vaso_Actual;
 	//variables 
 	Animator anim;
@@ -12,34 +13,70 @@ public class TouchLogic : MonoBehaviour {
 	public float Multiplier;
 	public float Score;
 	public float Cantidad_Vasos = 1 ;
+	public ParticleSystem Soda;
+
+
+	//variables locales 
+	public bool Comenzar_Llenado = false;
 	//-55.55 es el limite del vaso 
+
+	void Awake()
+	{
+		Soda.Stop ();
+	}
 
 	// Use this for initialization
 	void Start () {
 //		Score = 0f;
 //		Multiplier = 1f;
 //		Speed = 10f;
+		Soda.Stop ();
 		Vaso_Actual = GameObject.Find("Vaso");
 		Contenido = GameObject.Find ("Vaso/Panel_Mask/Liquid");
+		Cube_Collider = GameObject.Find ("Cube");
 	 	anim = Vaso_Actual.GetComponent<Animator> ();
 	}
 	
-	// Update is called once per frame
-	void OnMouseDown()
-	{
-		Debug.Log ("Pressed left click.");
 
-	}
 	void Update ()
 	{
-		if (Input.GetMouseButton (0)) {	
-			if (Contenido.transform.position.y < 160) {
-                	Debug.Log (Contenido.transform.position.y);
+		//EL vaso debe llenarse siempre y cuando 
+		//1- EL vaso exista
+		if (Contenido != null) 
+		{
+			//2-  EL vaso se encuentre en el centro 
+			if (Vaso_Actual.transform.position.x == 138)
+			{
+				//3- Se oprima el mousse o se haga touch en culaquier parte de la pantalla
+				if (Input.GetMouseButton (0)) {	
+					//4- NO se haya sobrellenado el vaso 
+					if (Contenido.transform.position.y < 160  ) {
+						//5- El chorro haya llegado hasta abajo 
+						if(Comenzar_Llenado == true)
+						{
+							Contenido.transform.Translate (new Vector3 (0.0f, 1.0f * Speed));	
+						}
 
-                Contenido.transform.Translate (new Vector3 (0.0f, 1.0f * Speed ));
-			} else {
-				StartCoroutine( ChangeGlass ());
+
+						Soda.Play ();
+				
+						//Contenido.transform.Translate (new Vector3 (0.0f, 1.0f * Speed));
+					} else {
+						Soda.Stop ();
+						ChangeGlass ();
+					}
+				}
+			//no se esta presionando el boton
+			else 
+				{
+					Soda.Stop ();
+				}
 			}
+		} 
+		else
+		{
+			Soda.Stop ();
+			InicializaVaso ();
 		}
 		// {
 		//	Debug.Log ("Released left click.");
@@ -56,41 +93,43 @@ public class TouchLogic : MonoBehaviour {
 		Contenido.transform.position = new Vector3 (-1.7f, -80f, 0.0f);
 	}
 
+	void InicializaVaso()
+	{
+		Debug.Log ("COnfigurando vaso para que comienza su llenado ");
+		Cantidad_Vasos--;
+		Vaso_Actual = GameObject.Find("Vaso");
+		Contenido = GameObject.Find ("Vaso/Panel_Mask/Liquid");
+		anim = Vaso_Actual.GetComponent<Animator> ();
+		anim.SetBool ("Inicializa", true);
+		//anim.SetBool ("Completed", false);
+		anim.SetTrigger ("Inicializa");
+
+		//Hacemos randoms los colores 
 
 
-	IEnumerator ChangeGlass()
+
+	}
+	void OnParticleCollision(GameObject Other)
+	{
+		Debug.Log ("Particulas estan colisionando con: "+ Other.name);
+	}
+	void ChangeGlass()
 	{
 		Debug.Log ("Cambio de Vaso");
 		Vector3 centrado = Vaso_Actual.transform.position;
-
 		anim.SetBool ("Completed", true);
 		anim.SetTrigger ("Completed");
-
-	
+		Comenzar_Llenado = false;
 		Destroy (Vaso_Actual,2.0f);
-		if (!Vaso_Actual)
-		{
-			Debug.Log ("Cambio de Vaso Satisfactorio");
-			Cantidad_Vasos--;
-			Vaso_Actual = GameObject.Find("Vaso");
-			Contenido = GameObject.Find ("Vaso/Panel_Mask/Liquid");
-			anim.SetBool ("Completed", true);
-			anim.SetTrigger ("Completed");
-			yield return new WaitForSeconds (2.0f);
-			anim.SetBool ("Completed", false);
-		    anim = Vaso_Actual.GetComponent<Animator> ();
-		}
 		//Posicion momentanea
 		if (Cantidad_Vasos == 1 ) {
 
-
+			//Solo queremos tener un vaso 
 			GameObject vasonuevo =  GameObject.Instantiate(Resources.Load("Vaso", typeof(GameObject)),new Vector3(-250.0f,0.0f,0.0f),new Quaternion()) as GameObject;
 			//GameObject vasonuevo =  GameObject.Instantiate(Vaso,new Vector3(0.0f,0.0f,0.0f),new Quaternion()) as GameObject;
 			vasonuevo.transform.parent = GameObject.Find ("Canvas").transform;
 			//Contenido.transform.Translate (0.0f, -150.0f, 0.0f);
 			vasonuevo.name = "Vaso";
-		
-			Contenido = GameObject.Find ("Vaso/Panel_Mask/Liquid");
 			Cantidad_Vasos++;
 		}
 	
