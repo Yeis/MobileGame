@@ -24,6 +24,8 @@ public class ParticleSYstem : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+
+		Debug.Log ("Ya toco fondo: "+ logic.Comenzar_Llenado);
 		if (Input.GetMouseButton (0) )
 		{
 			//Soda.Play ();	
@@ -35,6 +37,7 @@ public class ParticleSYstem : MonoBehaviour {
 	}
 	void OnParticleCollision(GameObject Other)
 	{
+		
 		if(logic.Comenzar_Llenado == false)
 		{
 			logic.Comenzar_Llenado = true;

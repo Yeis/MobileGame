@@ -1,27 +1,30 @@
+
 <?php
 
-// Create connection
-$conn = new mysqli("localhost", "Mryeis", "yeis1234", "mryeis_Fillit");
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} 
 
-$userID = "";
-$username = "";
-$Score=  1100;
-$pass = "";
+//inicializar la conexcion con la base de datos 
+$db =mysql_connect('localhost', 'Mryeis','yeis1234') or die ('Could not connect:  '.mysql_error());
+mysql_select_db('mryeis_Fillit') or die ('Could not select database');
 
-$Date;
-$query =  "INSERT INTO Scores (UserID , Username, Score,Date)
-VALUES ('".$usrID."', '".$username."', '".$Score."', '".$Date."')";
 
-if ($conn->query($sql) === TRUE) {
-    echo "New User created successfully";
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+//usamos la funcion escape para evitar SQL injection
+$userID = mysql_real_escape_string($_GET['UserID'],$db);
+$username = mysql_real_escape_string($_GET['Username'],$db);
+$score = mysql_real_escape_string($_GET['Score'],$db);
+$date = date('Y-m-d H:i:s');
+
+//NO DEL TODO SEGURO PARA QUE SIRVE EL HASH 
+$hash = _GET['hash'];
+$secretkey = "woloolow";
+$real_hash = md5($userID . $username . $score . $date . $secretkey);
+
+if($real_hash == $hash)
+{
+    //hacemos el query 
+    $query = "insert into scores values (NULL , '$userID' , '$username' , '$score' ,'$date' );";
+    $result = mysql_query($query) or die ('Query Failed: ', mysql_error());
 }
-
-$conn->close();
+    
+    
 
 ?>

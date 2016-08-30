@@ -48,7 +48,7 @@ public class BackgroundColor : MonoBehaviour {
 			num_fondo = -1;
 		}
 		num_fondo++;
-		Debug.Log (num_fondo.ToString ());
+		//Debug.Log (num_fondo.ToString ());
 
 	}
 }
