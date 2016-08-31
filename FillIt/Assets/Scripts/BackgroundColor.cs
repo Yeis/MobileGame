@@ -12,7 +12,7 @@ public class BackgroundColor : MonoBehaviour {
 	//Cyan 84, 14, 68 
 	//64 119 30
 	// 95 75 185
-	Color[] Color_Array;
+	public Color[] Color_Array;
 	Camera camara;
 	int num_fondo = 0;
 	void Start ()
@@ -48,7 +48,7 @@ public class BackgroundColor : MonoBehaviour {
 			num_fondo = -1;
 		}
 		num_fondo++;
-		Debug.Log (num_fondo.ToString ());
+		//Debug.Log (num_fondo.ToString ());
 
 	}
 }
