@@ -61,7 +61,9 @@ public class TouchLogic : MonoBehaviour {
 		//POSICION EN MAC  X= 136.3 Y=-84.3
 		//EL vaso debe llenarse siempre y cuando 
 		//posicion del vaso 
-	    Debug.Log(Vaso_Actual.transform.position.x);
+		Debug.Log("Vaso Actual X: " + Vaso_Actual.transform.position.x + "Vaso Actual Y: "+ Vaso_Actual.transform.position.y);
+		Debug.Log("Liquido Actual X: " + Contenido.transform.position.x + "Liquido Actual Y: "+ Contenido.transform.position.y);
+
 		//1- EL vaso exista
 		if (Contenido != null) 
 		{
@@ -70,6 +72,7 @@ public class TouchLogic : MonoBehaviour {
 			{
 				//3- Se oprima el mousse o se haga touch en culaquier parte de la pantalla
 				if (Input.GetMouseButton (0)) {	
+					Debug.Log ("Presionando");
 					//4- NO se haya sobrellenado el vaso 
 					if (Contenido.transform.position.y < 160  ) 
 					{
@@ -98,7 +101,9 @@ public class TouchLogic : MonoBehaviour {
 			//no se esta presionando el boton
 			else 
 				{
-					Soda.Stop ();
+					Debug.Log ("No Presionando");
+
+					//Soda.Stop ();
 				}
 			}
 		} 
